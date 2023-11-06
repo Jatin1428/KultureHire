@@ -1,0 +1,281 @@
+USE genzdataset;
+
+
+UPDATE personalized_info
+SET Gender = 'Male', ZipCode = 143001, CurrentCountry = 'India'
+WHERE ResponseID =0;
+
+DELETE FROM personalized_info
+WHERE ResponseID = 0;
+
+SELECT pi.ResponseID, CurrentCountry, pi.ZipCode, pi.Gender, 
+MissionUndefinedLikelihood,MisalignedMissionLikelihood,NoSocialImpactLikelihood, ExpectedSalary3Years, ExpectedSalary5Years, 
+WorkLikelihood3Years, PreferredEmployer, PreferredManager, PreferredWorkSetup,
+CareerInfluenceFactor, HigherEducationAbroad,PreferredWorkingEnvironment, ClosestAspirationalCareer
+FROM 
+personalized_info AS pi
+JOIN 
+mission_aspirations AS ma
+ON
+pi.ResponseID = ma.ResponseID 
+JOIN
+manager_aspirations AS mn
+ON
+ma.ResponseID = mn.ResponseID AND pi.ResponseID = mn.ResponseID
+LEFT JOIN
+learning_aspirations AS la
+ON
+mn.ResponseID = la.ResponseID AND pi.ResponseID = la.ResponseID;
+
+
+
+
+#1. How many males have responded the survey from india
+SELECT COUNT(CurrentCountry) AS no_of_males
+FROM  (SELECT pi.ResponseID, CurrentCountry, pi.ZipCode, pi.Gender, 
+MissionUndefinedLikelihood,MisalignedMissionLikelihood,NoSocialImpactLikelihood, ExpectedSalary3Years, ExpectedSalary5Years, 
+WorkLikelihood3Years, PreferredEmployer, PreferredManager, PreferredWorkSetup,
+CareerInfluenceFactor, HigherEducationAbroad,PreferredWorkingEnvironment, ClosestAspirationalCareer
+FROM 
+personalized_info AS pi
+JOIN 
+mission_aspirations AS ma
+ON
+pi.ResponseID = ma.ResponseID 
+JOIN
+manager_aspirations AS mn
+ON
+ma.ResponseID = mn.ResponseID AND pi.ResponseID = mn.ResponseID
+LEFT JOIN
+learning_aspirations AS la
+ON
+mn.ResponseID = la.ResponseID AND pi.ResponseID = la.ResponseID) AS maintable
+WHERE Gender LIKE 'Male%'
+AND 
+CurrentCountry = 'India';
+
+#2. How many females have responded the survey from india
+SELECT 
+COUNT(*) AS no_of_females_GENZ
+FROM 
+(SELECT pi.ResponseID, CurrentCountry, pi.ZipCode, pi.Gender, 
+MissionUndefinedLikelihood,MisalignedMissionLikelihood,NoSocialImpactLikelihood, ExpectedSalary3Years, ExpectedSalary5Years, 
+WorkLikelihood3Years, PreferredEmployer, PreferredManager, PreferredWorkSetup,
+CareerInfluenceFactor, HigherEducationAbroad,PreferredWorkingEnvironment, ClosestAspirationalCareer
+FROM 
+personalized_info AS pi
+JOIN 
+mission_aspirations AS ma
+ON
+pi.ResponseID = ma.ResponseID 
+JOIN
+manager_aspirations AS mn
+ON
+ma.ResponseID = mn.ResponseID AND pi.ResponseID = mn.ResponseID
+LEFT JOIN
+learning_aspirations AS la
+ON
+mn.ResponseID = la.ResponseID AND pi.ResponseID = la.ResponseID) AS maintable
+WHERE Gender LIKE 'Female%' 
+AND 
+CurrentCountry = 'India';
+
+#3. how many genz are influenced by their parents in regards to their career choices from india
+SELECT COUNT(CareerInfluenceFactor) AS no_of_genz
+FROM
+(SELECT pi.ResponseID, CurrentCountry, pi.ZipCode, pi.Gender, 
+MissionUndefinedLikelihood,MisalignedMissionLikelihood,NoSocialImpactLikelihood, ExpectedSalary3Years, ExpectedSalary5Years, 
+WorkLikelihood3Years, PreferredEmployer, PreferredManager, PreferredWorkSetup,
+CareerInfluenceFactor, HigherEducationAbroad,PreferredWorkingEnvironment, ClosestAspirationalCareer
+FROM 
+personalized_info AS pi
+JOIN 
+mission_aspirations AS ma
+ON
+pi.ResponseID = ma.ResponseID 
+JOIN
+manager_aspirations AS mn
+ON
+ma.ResponseID = mn.ResponseID AND pi.ResponseID = mn.ResponseID
+LEFT JOIN
+learning_aspirations AS la
+ON
+mn.ResponseID = la.ResponseID AND pi.ResponseID = la.ResponseID) AS maintable
+WHERE CareerInfluenceFactor ='My Parents' 
+AND
+CurrentCountry = 'India';
+
+
+#4. how many female genz are influenced by their parents in regards to their career choices from india
+SELECT COUNT(CareerInfluenceFactor) AS no_of_female_genz
+FROM
+(SELECT pi.ResponseID, CurrentCountry, pi.ZipCode, pi.Gender, 
+MissionUndefinedLikelihood,MisalignedMissionLikelihood,NoSocialImpactLikelihood, ExpectedSalary3Years, ExpectedSalary5Years, 
+WorkLikelihood3Years, PreferredEmployer, PreferredManager, PreferredWorkSetup,
+CareerInfluenceFactor, HigherEducationAbroad,PreferredWorkingEnvironment, ClosestAspirationalCareer
+FROM 
+personalized_info AS pi
+JOIN 
+mission_aspirations AS ma
+ON
+pi.ResponseID = ma.ResponseID 
+JOIN
+manager_aspirations AS mn
+ON
+ma.ResponseID = mn.ResponseID AND pi.ResponseID = mn.ResponseID
+LEFT JOIN
+learning_aspirations AS la
+ON
+mn.ResponseID = la.ResponseID AND pi.ResponseID = la.ResponseID) AS maintable
+WHERE CurrentCountry = 'India' AND Gender LIKE 'Female%';
+
+#5. how many male genz are influenced by their parents in regards to their career choices from india
+SELECT COUNT(*) AS no_of_male_genz
+FROM
+(SELECT pi.ResponseID, CurrentCountry, pi.ZipCode, pi.Gender, 
+MissionUndefinedLikelihood,MisalignedMissionLikelihood,NoSocialImpactLikelihood, ExpectedSalary3Years, ExpectedSalary5Years, 
+WorkLikelihood3Years, PreferredEmployer, PreferredManager, PreferredWorkSetup,
+CareerInfluenceFactor, HigherEducationAbroad,PreferredWorkingEnvironment, ClosestAspirationalCareer
+FROM 
+personalized_info AS pi
+JOIN 
+mission_aspirations AS ma
+ON
+pi.ResponseID = ma.ResponseID 
+JOIN
+manager_aspirations AS mn
+ON
+ma.ResponseID = mn.ResponseID AND pi.ResponseID = mn.ResponseID
+LEFT JOIN
+learning_aspirations AS la
+ON
+mn.ResponseID = la.ResponseID AND pi.ResponseID = la.ResponseID) AS maintable
+WHERE CurrentCountry = 'India' AND Gender LIKE 'Male%';
+
+#6. how many male and female GENZ are influenced by their parents in regards to their career choices from india
+SELECT COUNT(*), Gender AS no_of_genz
+FROM
+(SELECT pi.ResponseID, CurrentCountry, pi.ZipCode, pi.Gender, 
+MissionUndefinedLikelihood,MisalignedMissionLikelihood,NoSocialImpactLikelihood, ExpectedSalary3Years, ExpectedSalary5Years, 
+WorkLikelihood3Years, PreferredEmployer, PreferredManager, PreferredWorkSetup,
+CareerInfluenceFactor, HigherEducationAbroad,PreferredWorkingEnvironment, ClosestAspirationalCareer
+FROM 
+personalized_info AS pi
+JOIN 
+mission_aspirations AS ma
+ON
+pi.ResponseID = ma.ResponseID 
+JOIN
+manager_aspirations AS mn
+ON
+ma.ResponseID = mn.ResponseID AND pi.ResponseID = mn.ResponseID
+LEFT JOIN
+learning_aspirations AS la
+ON
+mn.ResponseID = la.ResponseID AND pi.ResponseID = la.ResponseID) AS maintable
+WHERE CurrentCountry = 'India'
+GROUP BY Gender;
+
+#7. How many GENZ influenced by social media and influencers
+SELECT COUNT(*) AS no_of_GENZ
+FROM
+(SELECT pi.ResponseID, CurrentCountry, pi.ZipCode, pi.Gender, 
+MissionUndefinedLikelihood,MisalignedMissionLikelihood,NoSocialImpactLikelihood, ExpectedSalary3Years, ExpectedSalary5Years, 
+WorkLikelihood3Years, PreferredEmployer, PreferredManager, PreferredWorkSetup,
+CareerInfluenceFactor, HigherEducationAbroad,PreferredWorkingEnvironment, ClosestAspirationalCareer
+FROM 
+personalized_info AS pi
+JOIN 
+mission_aspirations AS ma
+ON
+pi.ResponseID = ma.ResponseID 
+JOIN
+manager_aspirations AS mn
+ON
+ma.ResponseID = mn.ResponseID AND pi.ResponseID = mn.ResponseID
+LEFT JOIN
+learning_aspirations AS la
+ON
+mn.ResponseID = la.ResponseID AND pi.ResponseID = la.ResponseID) AS maintable
+WHERE 
+CareerInfluenceFactor = 'Social Media Like LinkedIn' OR CareerInfluenceFactor = 'Influencers who had successful careers' AND CurrentCountry = 'India'
+;
+
+#8. How many GENZ influenced by social media and influencers together display male and female seperately
+SELECT Gender,  COUNT(*) AS no_of_GENZ
+FROM
+(SELECT pi.ResponseID, CurrentCountry, pi.ZipCode, pi.Gender, 
+MissionUndefinedLikelihood,MisalignedMissionLikelihood,NoSocialImpactLikelihood, ExpectedSalary3Years, ExpectedSalary5Years, 
+WorkLikelihood3Years, PreferredEmployer, PreferredManager, PreferredWorkSetup,
+CareerInfluenceFactor, HigherEducationAbroad,PreferredWorkingEnvironment, ClosestAspirationalCareer
+FROM 
+personalized_info AS pi
+JOIN 
+mission_aspirations AS ma
+ON
+pi.ResponseID = ma.ResponseID 
+JOIN
+manager_aspirations AS mn
+ON
+ma.ResponseID = mn.ResponseID AND pi.ResponseID = mn.ResponseID
+LEFT JOIN
+learning_aspirations AS la
+ON
+mn.ResponseID = la.ResponseID AND pi.ResponseID = la.ResponseID) AS maintable
+WHERE CareerInfluenceFactor = 'Social Media Like LinkedIn' OR CareerInfluenceFactor = 'Influencers who had successful careers' AND CurrentCountry = 'India'
+GROUP BY Gender;
+
+#9. How many GENZ who are influenced by social media are looking to go abroad
+SELECT  COUNT(*) AS no_of_GENZ
+FROM
+(SELECT pi.ResponseID, CurrentCountry, pi.ZipCode, pi.Gender, 
+MissionUndefinedLikelihood,MisalignedMissionLikelihood,NoSocialImpactLikelihood, ExpectedSalary3Years, ExpectedSalary5Years, 
+WorkLikelihood3Years, PreferredEmployer, PreferredManager, PreferredWorkSetup,
+CareerInfluenceFactor, HigherEducationAbroad,PreferredWorkingEnvironment, ClosestAspirationalCareer
+FROM 
+personalized_info AS pi
+JOIN 
+mission_aspirations AS ma
+ON
+pi.ResponseID = ma.ResponseID 
+JOIN
+manager_aspirations AS mn
+ON
+ma.ResponseID = mn.ResponseID AND pi.ResponseID = mn.ResponseID
+LEFT JOIN
+learning_aspirations AS la
+ON
+mn.ResponseID = la.ResponseID AND pi.ResponseID = la.ResponseID) AS maintable
+WHERE 
+CareerInfluenceFactor = 'Social Media Like LinkedIn' 
+AND 
+HigherEducationAbroad = 'Yes, I wil';
+
+
+#10. How many GENZ who are influenced by people from my circle are looking to go abroad
+SELECT  COUNT(*) AS no_of_GENZ
+FROM
+(SELECT pi.ResponseID, CurrentCountry, pi.ZipCode, pi.Gender, 
+MissionUndefinedLikelihood,MisalignedMissionLikelihood,NoSocialImpactLikelihood, ExpectedSalary3Years, ExpectedSalary5Years, 
+WorkLikelihood3Years, PreferredEmployer, PreferredManager, PreferredWorkSetup,
+CareerInfluenceFactor, HigherEducationAbroad,PreferredWorkingEnvironment, ClosestAspirationalCareer
+FROM 
+personalized_info AS pi
+JOIN 
+mission_aspirations AS ma
+ON
+pi.ResponseID = ma.ResponseID 
+JOIN
+manager_aspirations AS mn
+ON
+ma.ResponseID = mn.ResponseID AND pi.ResponseID = mn.ResponseID
+LEFT JOIN
+learning_aspirations AS la
+ON
+mn.ResponseID = la.ResponseID AND pi.ResponseID = la.ResponseID) AS maintable
+WHERE 
+CareerInfluenceFactor = 'People from my circle, but not family members' 
+AND 
+HigherEducationAbroad = 'Yes, I wil';
+
+
